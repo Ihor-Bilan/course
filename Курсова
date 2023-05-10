@@ -1,0 +1,115 @@
+using System;
+
+namespace Calculator
+{
+    class Calculator
+    {
+        public static double DoOperation(double num1, double num2, string op)
+        {
+            double result = double.NaN; /* Значення за замовчуванням "не-число", яке використовується,
+                                         якщо операція, наприклад, ділення може призвести до помилки.*/
+
+            // Для виконання обчислень використовується оператор switch.
+            switch (op)
+            {
+                case "+":
+                    result = num1 + num2;
+                    break;
+                case "-":
+                    result = num1 - num2;
+                    break;
+                case "*":
+                    result = num1 * num2;
+                    break;
+                case "/":
+                    // Попросити користувача ввести ненульовий дільник.
+                    if (num2 != 0 )
+                    {
+                        result = num1 / num2;
+                    }
+                    break;
+                // Повернути текст у випадку некоректного вводу опції за замовчуванням:
+
+                default:
+                    break;
+            }
+            return result;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            bool endApp = false;
+            // Вивести заголовок як додаток консольного калькулятора C#.
+            Console.WriteLine("Консольний калькулятор в C#\r");
+            Console.WriteLine("------------------------\n");
+
+            while (!endApp)
+            {
+                // Оголосити змінні та встановити в пусті.
+                string numInput1 = "";
+                string numInput2 = "";
+                double result = 0;
+
+                // Запросити користувача ввести перше число.
+                Console.Write("Введіть число, а потім натисніть Enter:  ");
+                numInput1 = Console.ReadLine();
+
+                double cleanNum1 = 0;
+                while (!double.TryParse(numInput1, out cleanNum1))
+                {
+                    Console.Write("Це не коректне введення. Введіть ціле значення: ");
+                    numInput1 = Console.ReadLine();
+                }
+
+                // Запросити користувача ввести друге число.
+                Console.Write("Введіть інше число, а потім натисніть Enter: ");
+                numInput2 = Console.ReadLine();
+
+                double cleanNum2 = 0;
+                while (!double.TryParse(numInput2, out cleanNum2))
+                {
+                    Console.Write("Це невірне введення. Введіть ціле значення: ");
+                    numInput2 = Console.ReadLine();
+                }
+
+                //Попросити користувача вибрати оператор.
+                Console.WriteLine("Виберіть оператор з наступного списку:");
+                Console.WriteLine("\t+ - Додати");
+                Console.WriteLine("\t- - Відняти");
+                Console.WriteLine("\t* - Множення");
+                Console.WriteLine("\t/ - Ділення");
+                Console.Write("Ваш варіант: ");
+
+                string op = Console.ReadLine();
+
+                try
+                {
+                    result = Calculator.DoOperation(cleanNum1, cleanNum2, op); 
+                    if (double.IsNaN(result))
+                    {
+                        Console.WriteLine("Ця операція призведе до математичної помилки.\n");
+                        Console.Beep(500,500);
+                    }
+                    else Console.WriteLine("Ваш результат: {0:0.##}\n", result);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("О ні! Виникла виключна ситуація при спробі виконати обчислення.\n - Details: " + e.Message);
+                }
+
+                Console.WriteLine("------------------------\n");
+
+                // Дочекатись відповіді користувача перед закриттям.
+                Console.Write("Натисніть 'n' та Enter, щоб закрити програму, або натисніть клавішу Enter, щоб продовжити: ");
+                if (Console.ReadLine() == "n") endApp = true;
+
+                Console.WriteLine("\n"); // Дружній міжрядковий інтервал.
+            }
+            return;
+        }
+    }
+}
